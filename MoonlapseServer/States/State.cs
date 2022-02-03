@@ -49,19 +49,24 @@ namespace MoonlapseServer.States
             }
         }
 
-        protected virtual void HandleLoginPacket(LoginPacket p)
+        void LogUnregisteredPacket(Packet p)
         {
             _protocol.Log($"{p.GetType()} handler not registered for {GetType()}", LogContext.Error);
+        }
+
+        protected virtual void HandleLoginPacket(LoginPacket p)
+        {
+            LogUnregisteredPacket(p);
         }
 
         protected virtual void HandleChatPacket(ChatPacket p)
         {
-            _protocol.Log($"{p.GetType()} handler not registered for {GetType()}", LogContext.Error);
+            LogUnregisteredPacket(p);
         }
 
         protected virtual void HandleRegisterPacket(RegisterPacket p)
         {
-            _protocol.Log($"{p.GetType()} handler not registered for {GetType()}", LogContext.Error);
+            LogUnregisteredPacket(p);
         }
     }
 }

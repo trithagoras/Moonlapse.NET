@@ -14,6 +14,12 @@ namespace MoonlapseServer.States
 
         protected override void HandleLoginPacket(LoginPacket p)
         {
+            if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
+            {
+                _protocol.Log($"Login failed: username or password contains whitespace or is empty");
+                return;
+            }
+
             var db = new MoonlapseDbContext();
 
             _protocol.Log($"Attempting login with username={p.Username}");
@@ -45,6 +51,12 @@ namespace MoonlapseServer.States
 
         protected override void HandleRegisterPacket(RegisterPacket p)
         {
+            if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
+            {
+                _protocol.Log($"Registration failed: username or password contains whitespace or is empty");
+                return;
+            }
+
             var db = new MoonlapseDbContext();
 
             _protocol.Log($"Attempting registration with username={p.Username}");
@@ -59,7 +71,12 @@ namespace MoonlapseServer.States
                 db.Add(new UserModel
                 {
                     Username = p.Username,
-                    Password = p.Password
+                    Password = p.Password,
+                    Entity = new EntityModel
+                    {
+                        Name = p.Username,
+                        TypeName = "Player"
+                    }
                 });
                 db.SaveChanges();
                 _protocol.Log($"Registration successful: user with username={p.Username}");
@@ -70,5 +87,12 @@ namespace MoonlapseServer.States
                 _protocol.Log($"Registration failed: user with username={p.Username} already exists", LogContext.Warn);
             }
         }
+
+        /// <summary>
+        /// A string to be used in usernames + passwords should not contain spaces or be empty
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        static bool IsStringWellFormed(string s) => !(s.Contains(' ') || s == "");
     }
 }

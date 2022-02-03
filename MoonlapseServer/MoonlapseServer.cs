@@ -30,7 +30,7 @@ namespace MoonlapseServer
                 var client = await _listener.AcceptTcpClientAsync();
                 Log("Client connected");
                 var proto = new Protocol(client, this);
-                Task.Run(proto.Start);
+                _ = Task.Run(proto.Start);
             }
         }
 
