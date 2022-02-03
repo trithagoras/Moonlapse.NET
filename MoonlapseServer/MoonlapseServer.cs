@@ -1,0 +1,42 @@
+﻿using System;
+using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
+using MoonlapseServer.Utils.Logging;
+
+namespace MoonlapseServer
+{
+    public class Server
+    {
+        public const string Host = "127.0.0.1";
+        public const int Port = 42523;
+
+        readonly TcpListener _listener;
+
+        public Server()
+        {
+            var ip = IPAddress.Parse(Host);
+            _listener = new TcpListener(ip, Port);
+        }
+
+        public async Task Start()
+        {
+            Log("Starting MoonlapseServer");
+            _listener.Start();
+
+            // main accept loop
+            while (true)
+            {
+                var client = await _listener.AcceptTcpClientAsync();
+                Log("Client connected");
+                var proto = new Protocol(client, this);
+                Task.Run(proto.Start);
+            }
+        }
+
+        void Log(string message, LogContext context = LogContext.Info)
+        {
+            Logging.Log("SERVER", message, context);
+        }
+    }
+}
