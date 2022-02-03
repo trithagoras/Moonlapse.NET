@@ -9,6 +9,11 @@ namespace MoonlapseServer.States
     /// By default, an incoming packet is simply absorbed and not handled.
     /// It is up to an inheriting state class to override the packet
     /// handling functionality.
+    ///
+    /// <br></br>
+    ///
+    /// To register a handler for packet p, you have to add case to HandlePacketFromString
+    /// as well as add a virtual method HandlepPacket and then implement in child state.
     /// </summary>
     public abstract class State
     {
@@ -34,6 +39,10 @@ namespace MoonlapseServer.States
             {
                 HandleChatPacket(Packet.FromString<ChatPacket>(packetString));
             }
+            else if (type == typeof(RegisterPacket))
+            {
+                HandleRegisterPacket(Packet.FromString<RegisterPacket>(packetString));
+            }
             else
             {
                 throw new Exception($"Packet type ({typeString}) doesn't exist");
@@ -46,6 +55,11 @@ namespace MoonlapseServer.States
         }
 
         protected virtual void HandleChatPacket(ChatPacket p)
+        {
+            _protocol.Log($"{p.GetType()} handler not registered for {GetType()}", LogContext.Error);
+        }
+
+        protected virtual void HandleRegisterPacket(RegisterPacket p)
         {
             _protocol.Log($"{p.GetType()} handler not registered for {GetType()}", LogContext.Error);
         }
