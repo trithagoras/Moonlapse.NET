@@ -2,6 +2,9 @@
 using SadConsole.Input;
 using Microsoft.Xna.Framework;
 using Console = SadConsole.Console;
+using MoonlapseClient.Consoles;
+using MoonlapseClient.Networking;
+using System.Threading.Tasks;
 
 namespace MoonlapseClient
 {
@@ -12,11 +15,14 @@ namespace MoonlapseClient
 
         public FontController FontController { get; private set; }
 
+        public NetworkController NetworkController { get; private set; }
+
         Console _currentConsole;
 
         public Game()
         {
             FontController = new FontController();
+            NetworkController = new NetworkController("127.0.0.1", 42523);
         }
 
         public void Start()
@@ -35,13 +41,13 @@ namespace MoonlapseClient
         private void Init()
         {
             FontController.Init();
+            _currentConsole = new EntryConsole(this);
 
-            var console = new Console(80, 25, FontController.GameFont);
-            console.FillWithRandomGarbage();
-            console.Fill(new Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0);
-            console.Print(4, 4, "Hello from SadConsole");
+            // init networking
+            Task.Run(NetworkController.Start);
 
-            SadConsole.Global.CurrentScreen = console;
+            Global.CurrentScreen = _currentConsole;
+            ((EntryConsole)_currentConsole).Draw();
         }
     }
 }

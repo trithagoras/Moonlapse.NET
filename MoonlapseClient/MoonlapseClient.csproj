@@ -11,10 +11,12 @@
     <None Remove="Assets\" />
     <None Remove="MonoGame.Framework.DesktopGL" />
     <None Remove="Consoles\" />
+    <None Remove="Networking\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Consoles\" />
+    <Folder Include="Networking\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Assets\1bit.font">
