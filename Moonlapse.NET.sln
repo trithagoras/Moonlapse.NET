@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.810.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoonlapseServer", "MoonlapseServer\MoonlapseServer.csproj", "{23C6A1D7-B04B-42DF-A869-BE4902DCF6C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoonlapseClient", "MoonlapseClient\MoonlapseClient.csproj", "{8098A557-5A5D-40D2-A809-E6E7BBE07942}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{23C6A1D7-B04B-42DF-A869-BE4902DCF6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23C6A1D7-B04B-42DF-A869-BE4902DCF6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23C6A1D7-B04B-42DF-A869-BE4902DCF6C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8098A557-5A5D-40D2-A809-E6E7BBE07942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8098A557-5A5D-40D2-A809-E6E7BBE07942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8098A557-5A5D-40D2-A809-E6E7BBE07942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8098A557-5A5D-40D2-A809-E6E7BBE07942}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

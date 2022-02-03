@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using MoonlapseServer.States;
 using MoonlapseServer.Utils.Logging;
-using MoonlapseServer.Models.Packets;
 
 namespace MoonlapseServer
 {

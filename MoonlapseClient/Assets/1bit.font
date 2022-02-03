@@ -1,0 +1,10 @@
+﻿{
+  "Name": "1bit",
+  "FilePath": "1bit.png",
+  "GlyphHeight": 16,
+  "GlyphPadding": 0,
+  "GlyphWidth": 16,
+  "SolidGlyphIndex": 303,
+  "Columns": 49,
+  "IsSadExtended": false
+}
