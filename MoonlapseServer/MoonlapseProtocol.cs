@@ -30,9 +30,14 @@ namespace MoonlapseServer
 
             // main read loop
             string line;
-            while ((line = await sr.ReadLineAsync()) != null)
+            try
             {
-                StringRecieved(line);
+                while ((line = await sr.ReadLineAsync()) != null)
+                {
+                    StringRecieved(line);
+                }
+            } catch (Exception)
+            {
             }
 
             // connection ended
@@ -60,6 +65,7 @@ namespace MoonlapseServer
         void ConnectionEnded()
         {
             Log("Client disconnected");
+            _server.ConnectedProtocols.Remove(this);
         }
 
         public void Log(string message, LogContext context = LogContext.Info)
