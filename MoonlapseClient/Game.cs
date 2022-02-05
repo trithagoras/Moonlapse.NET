@@ -38,16 +38,17 @@ namespace MoonlapseClient
             SadConsole.Game.Instance.Dispose();
         }
 
-        private void Init()
+        void Init()
         {
-            FontController.Init();
-            _currentConsole = new EntryConsole(this);
-
             // init networking
             Task.Run(NetworkController.Start);
 
+            FontController.Init();
+            _currentConsole = new EntryConsole(this);
+            _currentConsole.IsFocused = true;
+
             Global.CurrentScreen = _currentConsole;
-            ((EntryConsole)_currentConsole).Draw();
         }
+
     }
 }

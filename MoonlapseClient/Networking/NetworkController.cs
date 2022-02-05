@@ -12,6 +12,8 @@ namespace MoonlapseClient.Networking
         public string Hostname { get; private set; }
         public int Port { get; private set; }
 
+        public string ErrorMessage { get; private set; }
+
         public NetworkController(string hostname, int port)
         {
             Hostname = hostname;
@@ -21,7 +23,14 @@ namespace MoonlapseClient.Networking
 
         public async Task Start()
         {
-            await _client.ConnectAsync(Hostname, Port);
+            try
+            {
+                await _client.ConnectAsync(Hostname, Port);
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Unable to connect to server";
+            }
 
             var stream = _client.GetStream();
             var sr = new StreamReader(stream);
@@ -29,8 +38,32 @@ namespace MoonlapseClient.Networking
             // main read loop
             while (true)
             {
-                string s = await sr.ReadLineAsync();
-                Console.WriteLine(s);
+                try
+                {
+                    string s = await sr.ReadLineAsync();
+
+                    // if DenyPacket, ErrorMessage = packet.Message
+                    Console.WriteLine(s);
+                }
+                catch (Exception)
+                {
+                    ErrorMessage = "Connection to server lost";
+                }
+                
+            }
+        }
+
+        public async void SendLine(string s)
+        {
+            try
+            {
+                var sw = new StreamWriter(_client.GetStream());
+                await sw.WriteLineAsync(s);
+                await sw.FlushAsync();
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Connection to server lost";
             }
         }
     }
