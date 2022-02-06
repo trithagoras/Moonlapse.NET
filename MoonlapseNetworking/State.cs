@@ -1,6 +1,7 @@
 ﻿using System;
 using MoonlapseNetworking.Packets;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MoonlapseNetworking
 {
@@ -18,7 +19,8 @@ namespace MoonlapseNetworking
     {
         protected delegate void PacketEventHandler(object sender, PacketEventArgs args);
 
-        protected event PacketEventHandler LoginPacketEvent, ChatPacketEvent, RegisterPacketEvent, DenyPacketEvent, OkPacketEvent;
+        protected event PacketEventHandler LoginPacketEvent, ChatPacketEvent, RegisterPacketEvent,
+            DenyPacketEvent, OkPacketEvent, EntityPacketEvent, ComponentPacketEvent;
 
         public void HandlePacketFromString(string packetString)
         {
@@ -32,7 +34,9 @@ namespace MoonlapseNetworking
                 { typeof(RegisterPacket), RegisterPacketEvent },
                 { typeof(ChatPacket), ChatPacketEvent },
                 { typeof(DenyPacket), DenyPacketEvent },
-                { typeof(OkPacket), OkPacketEvent }
+                { typeof(OkPacket), OkPacketEvent },
+                { typeof(EntityPacket), EntityPacketEvent },
+                { typeof(ComponentPacket), ComponentPacketEvent }
             };
 
             try
@@ -51,6 +55,9 @@ namespace MoonlapseNetworking
             catch (NullReferenceException)
             {
                 throw new PacketEventNotSubscribedException(typeString);
+            }
+            catch (JsonException)
+            {
             }
         }
     }

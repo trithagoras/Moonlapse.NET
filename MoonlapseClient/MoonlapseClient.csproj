@@ -12,11 +12,13 @@
     <None Remove="MonoGame.Framework.DesktopGL" />
     <None Remove="Consoles\" />
     <None Remove="States\" />
+    <None Remove="ClientComponents\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Consoles\" />
     <Folder Include="States\" />
+    <Folder Include="ClientComponents\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Assets\1bit.font">

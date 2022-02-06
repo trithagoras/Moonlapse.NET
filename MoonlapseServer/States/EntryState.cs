@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Linq;
-using MoonlapseServer.Models;
+using MoonlapseServer.DbModels;
 using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
 using MoonlapseServer.Utils.Logging;
+using MoonlapseNetworking.ServerModels;
+using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseServer.DbModels.Components;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoonlapseServer.States
 {
@@ -11,11 +15,22 @@ namespace MoonlapseServer.States
     {
         Protocol _protocol;
 
+        bool _readyToChangeState;
+
         public EntryState(Protocol protocol)
         {
             _protocol = protocol;
             LoginPacketEvent += EntryState_LoginPacketEvent;
             RegisterPacketEvent += EntryState_RegisterPacketEvent;
+            OkPacketEvent += EntryState_OkPacketEvent;
+        }
+
+        private void EntryState_OkPacketEvent(object sender, PacketEventArgs args)
+        {
+            if (_readyToChangeState)
+            {
+                _protocol.State = new GameState(_protocol);
+            }
         }
 
         private void EntryState_RegisterPacketEvent(object sender, PacketEventArgs args)
@@ -40,15 +55,26 @@ namespace MoonlapseServer.States
             if (user == null)
             {
                 // can register :)
-                db.Add(new UserModel
+                var e = new EntityDbModel
+                {
+                    Name = p.Username,
+                    TypeName = "Player"
+                };
+                db.Add(new UserDbModel
                 {
                     Username = p.Username,
                     Password = p.Password,
-                    Entity = new EntityModel
+                    Entity = e
+                });
+                db.Add(new PositionComponent
+                {
+                    Component = new ComponentModel
                     {
-                        Name = p.Username,
-                        TypeName = "Player"
-                    }
+                        Entity = e,
+                        TypeName = "Position"
+                    },
+                    X = 0,
+                    Y = 0
                 });
                 db.SaveChanges();
                 _protocol.Log($"Registration successful: user with username={p.Username}");
@@ -78,7 +104,8 @@ namespace MoonlapseServer.States
             _protocol.Log($"Attempting login with username={p.Username}");
 
             var user = db.Users
-                .Where(e => e.Username == p.Username)
+                .Include(u => u.Entity)
+                .Where(u => u.Username == p.Username)
                 .FirstOrDefault();
 
             if (user == null)
@@ -95,8 +122,19 @@ namespace MoonlapseServer.States
                 // user exists
                 if (user.Password == p.Password)
                 {
-                    _protocol.Login(p.Username);
-                    _protocol.State = new MainState(_protocol);
+                    var entityModel = db.Entities
+                        .Where(e => e == user.Entity)
+                        .First();
+
+                    var e = new Entity
+                    {
+                        Id = entityModel.Id,
+                        Name = entityModel.Name,
+                        TypeName = entityModel.TypeName
+                    };
+
+                    _protocol.Login(e);
+                    _readyToChangeState = true;
                 }
                 else
                 {

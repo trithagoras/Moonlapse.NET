@@ -5,7 +5,7 @@ namespace MoonlapseClient
     public class Game
     {
         public const int Width = 80;
-        public const int Height = 25;
+        public const int Height = 32;
 
         public NetworkController NetworkController { get; private set; }
 

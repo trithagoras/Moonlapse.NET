@@ -15,7 +15,7 @@ namespace MoonlapseNetworking.Packets
         public static T FromString<T>(string s) where T : Packet
         {
             var objString = s[(s.IndexOf(':') + 1)..];
-            var obj = JsonConvert.DeserializeObject<T>(objString);
+            var obj = JsonConvert.DeserializeObject<T>(objString, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
 
             if (obj == null)
             {
