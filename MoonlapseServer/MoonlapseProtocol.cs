@@ -16,7 +16,7 @@ namespace MoonlapseServer
     public class Protocol
     {
         readonly TcpClient _client;
-        readonly Server _server;
+        public Server Server { get; }
 
         public State State { get; set; }
 
@@ -25,7 +25,7 @@ namespace MoonlapseServer
         public Protocol(TcpClient client, Server server)
         {
             _client = client;
-            _server = server;
+            Server = server;
             State = new EntryState(this);
         }
 
@@ -55,7 +55,7 @@ namespace MoonlapseServer
             PlayerEntity = playerEntity;
 
             // need to add all components to player entity (and send later)
-            LoadEntity(PlayerEntity);
+            Server.LoadEntity(PlayerEntity);
 
             Log("Successfully logged in");
             SendPacket(new OkPacket { Message = "Login" });
@@ -95,47 +95,12 @@ namespace MoonlapseServer
         void ConnectionEnded()
         {
             Log("Client disconnected");
-            _server.ConnectedProtocols.Remove(this);
+            Server.ConnectedProtocols.Remove(this);
         }
 
         public void Log(string message, LogContext context = LogContext.Info)
         {
             Logging.Log(PlayerEntity == null ? "None" : PlayerEntity.Name, message, context, State.GetType().ToString());
-        }
-
-        /// <summary>
-        /// Loads ALL components from DB that belongs to entity and sets them.
-        /// </summary>
-        /// <param name="entity"></param>
-        void LoadEntity(Entity entity)
-        {
-            var db = new MoonlapseDbContext();
-
-            var componentModels = db.Components
-                .Include(c => c.Entity)
-                .Where(cm => cm.Entity.Id == entity.Id)
-                .ToList();
-
-            // TODO: This will become VERY unmanageable as # of components grow
-            foreach (var model in componentModels)
-            {
-                if (model.TypeName == "Position")
-                {
-                    var posModel = db.PositionComponents
-                        .Include(p => p.Component)
-                        .Where(p => p.Component == model)
-                        .First();
-
-                    var position = new Position
-                    {
-                        EntityId = entity.Id,
-                        X = posModel.X,
-                        Y = posModel.Y
-                    };
-
-                    entity.SetComponent(position);
-                }
-            }
         }
     }
 }

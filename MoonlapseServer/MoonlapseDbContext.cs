@@ -1,16 +1,16 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using MoonlapseServer.DbModels;
-using MoonlapseServer.DbModels.Components;
+using MoonlapseNetworking.ServerModels;
+using MoonlapseNetworking.ServerModels.Components;
 
 namespace MoonlapseServer
 {
     public class MoonlapseDbContext : DbContext
     {
-        public DbSet<UserDbModel> Users { get; set; }
-        public DbSet<EntityDbModel> Entities { get; set; }
-        public DbSet<ComponentModel> Components { get; set; }
-        public DbSet<PositionComponent> PositionComponents { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Entity> Entities { get; set; }
+        public DbSet<Component> Components { get; set; }
+        public DbSet<Position> PositionComponents { get; set; }
 
         public string DbPath { get; }
 

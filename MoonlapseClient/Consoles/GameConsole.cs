@@ -12,7 +12,6 @@ namespace MoonlapseClient.Consoles
         public GameConsole(GameState state) : base(Game.Width, Game.Height, FontController.GameFont)
         {
             _state = state;
-            //FillWithRandomGarbage();
         }
 
         public override void Draw(TimeSpan timeElapsed)

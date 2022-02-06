@@ -38,7 +38,7 @@ namespace MoonlapseClient.States
         {
             var p = Packet.FromString<ComponentPacket>(args.PacketString);
             var c = p.Component;
-            var e = KnownEntities[c.EntityId];
+            var e = KnownEntities[c.Entity.Id];
             e.SetComponent(c);
         }
 

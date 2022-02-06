@@ -1,8 +1,16 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MoonlapseNetworking.ServerModels.Components
 {
-    public abstract class Component
+    public class Component
     {
-        public int EntityId { get; set; }
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [ForeignKey("EntityId")]
+        public Entity Entity { get; set; }
     }
 }

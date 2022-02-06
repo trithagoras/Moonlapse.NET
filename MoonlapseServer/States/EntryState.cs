@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using MoonlapseServer.DbModels;
 using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
 using MoonlapseServer.Utils.Logging;
 using MoonlapseNetworking.ServerModels;
 using MoonlapseNetworking.ServerModels.Components;
-using MoonlapseServer.DbModels.Components;
 using Microsoft.EntityFrameworkCore;
 
 namespace MoonlapseServer.States
@@ -55,27 +53,25 @@ namespace MoonlapseServer.States
             if (user == null)
             {
                 // can register :)
-                var e = new EntityDbModel
+
+                var e = new Entity
                 {
                     Name = p.Username,
                     TypeName = "Player"
                 };
-                db.Add(new UserDbModel
+                db.Add(e);
+                db.Add(e.AddComponent<Position>());
+
+                var u = new User
                 {
+                    Entity = e,
                     Username = p.Username,
-                    Password = p.Password,
-                    Entity = e
-                });
-                db.Add(new PositionComponent
-                {
-                    Component = new ComponentModel
-                    {
-                        Entity = e,
-                        TypeName = "Position"
-                    },
-                    X = 0,
-                    Y = 0
-                });
+                    Password = p.Password
+                };
+
+                db.Add(u);
+                db.SaveChanges();
+
                 db.SaveChanges();
                 _protocol.Log($"Registration successful: user with username={p.Username}");
                 _protocol.SendPacket(new OkPacket { Message = "Register" });
@@ -122,18 +118,11 @@ namespace MoonlapseServer.States
                 // user exists
                 if (user.Password == p.Password)
                 {
-                    var entityModel = db.Entities
+                    var entity = db.Entities
                         .Where(e => e == user.Entity)
                         .First();
 
-                    var e = new Entity
-                    {
-                        Id = entityModel.Id,
-                        Name = entityModel.Name,
-                        TypeName = entityModel.TypeName
-                    };
-
-                    _protocol.Login(e);
+                    _protocol.Login(entity);
                     _readyToChangeState = true;
                 }
                 else

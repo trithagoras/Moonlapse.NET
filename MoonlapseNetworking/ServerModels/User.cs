@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MoonlapseServer.DbModels
+namespace MoonlapseNetworking.ServerModels
 {
-    public class UserDbModel
+    public class User
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
         [ForeignKey("EntityId")]
-        public EntityDbModel Entity { get; set; }
+        public Entity Entity { get; set; }
 
+        [Required]
         public string Username { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using MoonlapseNetworking.ServerModels.Components;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace MoonlapseNetworking.ServerModels
 {
     public class Entity
     {
+        [Key]
         public int Id { get; set; }
+
         public string Name { get; set; }
+
+        [Required]
         public string TypeName { get; set; }
 
         [JsonIgnore]
+        [NotMapped]
         public readonly Dictionary<Type, Component> Components;
 
         public Entity()
@@ -40,17 +47,13 @@ namespace MoonlapseNetworking.ServerModels
             }
 
             var component = new T();
-            SetComponent<T>(component);
+            SetComponent(component);
             return component;
-        }
-
-        public void SetComponent<T>(T component) where T : Component
-        {
-            Components[typeof(T)] = component;
         }
 
         public void SetComponent(Component component)
         {
+            component.Entity = this;
             Components[component.GetType()] = component;
         }
 
@@ -73,22 +76,5 @@ namespace MoonlapseNetworking.ServerModels
 
     public class ComponentNotAttachedException : Exception
     {
-    }
-
-    /// <summary>
-    /// This class can be used to instantiate objects
-    /// </summary>
-    public static class EntityTemplates
-    {
-        public static Entity MakePlayer()
-        {
-            var e = new Entity()
-            {
-                TypeName = "Player"
-            };
-            e.AddComponent<Position>();
-
-            return e;
-        }
     }
 }
