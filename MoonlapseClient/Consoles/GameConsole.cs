@@ -1,14 +1,17 @@
 ﻿using System;
 using SadConsole;
+using MoonlapseClient.States;
+
 namespace MoonlapseClient.Consoles
 {
     public class GameConsole : SadConsole.Console
     {
-        Game _game;
+        readonly GameState _state;
 
-        public GameConsole(Game game) : base(Game.Width, Game.Height, FontController.GameFont)
+        public GameConsole(GameState state) : base(Game.Width, Game.Height, FontController.GameFont)
         {
-            _game = game;
+            _state = state;
+            FillWithRandomGarbage();
         }
     }
 }

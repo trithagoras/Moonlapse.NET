@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using MoonlapseNetworking;
 using MoonlapseClient.States;
+using MoonlapseNetworking.Packets;
 
 namespace MoonlapseClient
 {
@@ -16,7 +17,7 @@ namespace MoonlapseClient
 
         public string ErrorMessage { get; private set; }
 
-        public State CurrentState { get; private set; }
+        public State CurrentState { get; set; }
 
         public NetworkController(string hostname, int port)
         {
@@ -60,12 +61,12 @@ namespace MoonlapseClient
             }
         }
 
-        public async Task SendLine(string s)
+        public async Task SendPacket(Packet p)
         {
             try
             {
                 var sw = new StreamWriter(_client.GetStream());
-                await sw.WriteLineAsync(s);
+                await sw.WriteLineAsync(p.ToString());
                 await sw.FlushAsync();
             }
             catch (Exception)

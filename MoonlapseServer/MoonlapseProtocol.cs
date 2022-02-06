@@ -50,6 +50,7 @@ namespace MoonlapseServer
         {
             Username = username;
             Log("Successfully logged in");
+            SendPacket(new OkPacket { Message = "Login" });
         }
 
         void StringRecieved(string s)

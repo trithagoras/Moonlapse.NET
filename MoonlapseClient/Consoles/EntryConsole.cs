@@ -40,6 +40,7 @@ namespace MoonlapseClient.Consoles
                 Position = new Point(4, 14)
             };
             Add(RegisterButton);
+            RegisterButton.Click += RegisterButton_Click;
 
             LoginButton = new Button(7)
             {
@@ -47,10 +48,9 @@ namespace MoonlapseClient.Consoles
                 Position = new Point(20, 14)
             };
             Add(LoginButton);
+            LoginButton.Click += LoginButton_Click;
 
-            LoginButton.Click += LoginButtonClick;
-
-            ErrorLabel = new Label(40)
+            ErrorLabel = new Label(50)
             {
                 Position = new Point(4, 6),
                 TextColor = Color.Red,
@@ -61,7 +61,25 @@ namespace MoonlapseClient.Consoles
             ThemeColors.RebuildAppearances();
         }
 
-        void LoginButtonClick(object sender, EventArgs e)
+        private void RegisterButton_Click(object sender, EventArgs e)
+        {
+            // client-side validation first
+            if (!IsStringWellFormed(UsernameTextBox.Text) || !IsStringWellFormed(PasswordTextBox.Text))
+            {
+                SetErrorLabel("Fields cannot contain whitespace");
+                return;
+            }
+
+            // send to server
+            var registerPacket = new RegisterPacket
+            {
+                Username = UsernameTextBox.Text,
+                Password = PasswordTextBox.Text
+            };
+            _ = _state.Register(registerPacket);
+        }
+
+        void LoginButton_Click(object sender, EventArgs e)
         {
             // client-side validation first
             if (!IsStringWellFormed(UsernameTextBox.Text) || !IsStringWellFormed(PasswordTextBox.Text))

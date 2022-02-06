@@ -25,6 +25,7 @@ namespace MoonlapseServer.States
             if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
             {
                 _protocol.Log($"Registration failed: username or password contains whitespace or is empty");
+                _protocol.SendPacket(new DenyPacket { Message = "Fields cannot contain whitespace" });
                 return;
             }
 
@@ -51,11 +52,13 @@ namespace MoonlapseServer.States
                 });
                 db.SaveChanges();
                 _protocol.Log($"Registration successful: user with username={p.Username}");
+                _protocol.SendPacket(new OkPacket { Message = "Register" });
             }
             else
             {
                 // user already exists >:(
                 _protocol.Log($"Registration failed: user with username={p.Username} already exists", LogContext.Warn);
+                _protocol.SendPacket(new DenyPacket { Message = "User already exists" });
             }
         }
 
@@ -66,10 +69,7 @@ namespace MoonlapseServer.States
             if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
             {
                 _protocol.Log($"Login failed: username or password contains whitespace or is empty");
-                _protocol.SendPacket(new DenyPacket
-                {
-                    Message = "Fields cannot contain whitespace"
-                });
+                _protocol.SendPacket(new DenyPacket { Message = "Fields cannot contain whitespace" });
                 return;
             }
 

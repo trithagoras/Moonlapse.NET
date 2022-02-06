@@ -22,8 +22,23 @@ namespace MoonlapseClient.States
             _networkController = nc;
 
             DenyPacketEvent += EntryState_DenyPacketEvent;
+            OkPacketEvent += EntryState_OkPacketEvent;
 
             Global.CurrentScreen = _console;
+        }
+
+        private void EntryState_OkPacketEvent(object sender, PacketEventArgs args)
+        {
+            var p = Packet.FromString<OkPacket>(args.PacketString);
+
+            if (p.Message == "Login")
+            {
+                _networkController.CurrentState = new GameState(_networkController);
+            }
+            else if (p.Message == "Register")
+            {
+                _console.SetErrorLabel("Registration Successful", false);
+            }
         }
 
         void EntryState_DenyPacketEvent(object sender, PacketEventArgs args)
@@ -33,9 +48,14 @@ namespace MoonlapseClient.States
             _console.SetErrorLabel(ErrorMessage);
         }
 
+        public async Task Register(RegisterPacket p)
+        {
+            await _networkController.SendPacket(p);
+        }
+
         public async Task Login(LoginPacket p)
         {
-            await _networkController.SendLine(p.ToString());
+            await _networkController.SendPacket(p);
         }
     }
 }
