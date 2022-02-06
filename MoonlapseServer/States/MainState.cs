@@ -1,17 +1,24 @@
 ﻿using System;
-using MoonlapseServer.Models.Packets;
+using MoonlapseNetworking;
+using MoonlapseNetworking.Packets;
 
 namespace MoonlapseServer.States
 {
     public class MainState : State
     {
-        public MainState(Protocol protocol) : base(protocol)
+        Protocol _protocol;
+
+        public MainState(Protocol protocol)
         {
+            _protocol = protocol;
+            ChatPacketEvent += MainState_ChatPacketEvent;
         }
 
-        protected override void HandleChatPacket(ChatPacket p)
+        void MainState_ChatPacketEvent(object sender, PacketEventArgs args)
         {
-            _protocol.Log($"Chat sent: {p.Message}");
+            var p = Packet.FromString<ChatPacket>(args.PacketString);
+
+            _protocol.Log($"Sent chat: {p.Message}");
         }
     }
 }

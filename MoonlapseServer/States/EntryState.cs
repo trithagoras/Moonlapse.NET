@@ -1,56 +1,27 @@
 ﻿using System;
 using System.Linq;
 using MoonlapseServer.Models;
-using MoonlapseServer.Models.Packets;
+using MoonlapseNetworking;
+using MoonlapseNetworking.Packets;
 using MoonlapseServer.Utils.Logging;
 
 namespace MoonlapseServer.States
 {
     public class EntryState : State
     {
-        public EntryState(Protocol protocol) : base(protocol)
+        Protocol _protocol;
+
+        public EntryState(Protocol protocol)
         {
+            _protocol = protocol;
+            LoginPacketEvent += EntryState_LoginPacketEvent;
+            RegisterPacketEvent += EntryState_RegisterPacketEvent;
         }
 
-        protected override void HandleLoginPacket(LoginPacket p)
+        private void EntryState_RegisterPacketEvent(object sender, PacketEventArgs args)
         {
-            if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
-            {
-                _protocol.Log($"Login failed: username or password contains whitespace or is empty");
-                return;
-            }
+            var p = Packet.FromString<RegisterPacket>(args.PacketString);
 
-            var db = new MoonlapseDbContext();
-
-            _protocol.Log($"Attempting login with username={p.Username}");
-
-            var user = db.Users
-                .Where(e => e.Username == p.Username)
-                .FirstOrDefault();
-
-            if (user == null)
-            {
-                // user does not exist
-                _protocol.Log($"Login failed: user with username={p.Username} does not exist");
-            }
-            else
-            {
-                // user exists
-                if (user.Password == p.Password)
-                {
-                    _protocol.Login(p.Username);
-                    _protocol.State = new MainState(_protocol);
-                }
-                else
-                {
-                    // incorrect password
-                    _protocol.Log($"Login failed: password incorrect");
-                }
-            }
-        }
-
-        protected override void HandleRegisterPacket(RegisterPacket p)
-        {
             if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
             {
                 _protocol.Log($"Registration failed: username or password contains whitespace or is empty");
@@ -85,6 +56,45 @@ namespace MoonlapseServer.States
             {
                 // user already exists >:(
                 _protocol.Log($"Registration failed: user with username={p.Username} already exists", LogContext.Warn);
+            }
+        }
+
+        void EntryState_LoginPacketEvent(object sender, PacketEventArgs args)
+        {
+            var p = Packet.FromString<LoginPacket>(args.PacketString);
+
+            if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
+            {
+                _protocol.Log($"Login failed: username or password contains whitespace or is empty");
+                return;
+            }
+
+            var db = new MoonlapseDbContext();
+
+            _protocol.Log($"Attempting login with username={p.Username}");
+
+            var user = db.Users
+                .Where(e => e.Username == p.Username)
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                // user does not exist
+                _protocol.Log($"Login failed: user with username={p.Username} does not exist");
+            }
+            else
+            {
+                // user exists
+                if (user.Password == p.Password)
+                {
+                    _protocol.Login(p.Username);
+                    _protocol.State = new MainState(_protocol);
+                }
+                else
+                {
+                    // incorrect password
+                    _protocol.Log($"Login failed: password incorrect");
+                }
             }
         }
 

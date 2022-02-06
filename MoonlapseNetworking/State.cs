@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using MoonlapseNetworking.Packets;
 
 namespace MoonlapseNetworking
@@ -26,25 +27,34 @@ namespace MoonlapseNetworking
         public void HandlePacketFromString(string packetString)
         {
             var typeString = packetString[0..packetString.IndexOf(':')];
-            typeString = $"MoonlapseServer.Models.Packets.{typeString}";
+            typeString = $"MoonlapseNetworking.Packets.{typeString}";
             var type = Type.GetType(typeString);
 
-            // switch statement won't work here
-            if (type == typeof(LoginPacket))
+            // test here
+
+            try
             {
-                LoginPacketEvent.Invoke(this, new PacketEventArgs(packetString));
+                // switch statement won't work here
+                if (type == typeof(LoginPacket))
+                {
+                    LoginPacketEvent.Invoke(this, new PacketEventArgs(packetString));
+                }
+                else if (type == typeof(ChatPacket))
+                {
+                    ChatPacketEvent.Invoke(this, new PacketEventArgs(packetString));
+                }
+                else if (type == typeof(RegisterPacket))
+                {
+                    RegisterPacketEvent.Invoke(this, new PacketEventArgs(packetString));
+                }
+                else
+                {
+                    throw new Exception($"Packet type ({typeString}) doesn't exist");
+                }
             }
-            else if (type == typeof(ChatPacket))
+            catch (NullReferenceException)
             {
-                ChatPacketEvent.Invoke(this, new PacketEventArgs(packetString));
-            }
-            else if (type == typeof(RegisterPacket))
-            {
-                RegisterPacketEvent.Invoke(this, new PacketEventArgs(packetString));
-            }
-            else
-            {
-                throw new Exception($"Packet type ({typeString}) doesn't exist");
+                throw new PacketEventNotSubscribedException(typeString);
             }
         }
     }
@@ -56,6 +66,13 @@ namespace MoonlapseNetworking
         public PacketEventArgs(string s)
         {
             PacketString = s;
+        }
+    }
+
+    public class PacketEventNotSubscribedException : Exception
+    {
+        public PacketEventNotSubscribedException(string packetType) : base($"{packetType} not registered in this state")
+        {
         }
     }
 }

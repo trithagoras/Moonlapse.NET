@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Threading.Tasks;
 using MoonlapseServer.States;
+using MoonlapseNetworking;
 using MoonlapseServer.Utils.Logging;
 
 namespace MoonlapseServer
@@ -55,6 +56,10 @@ namespace MoonlapseServer
             try
             {
                 State.HandlePacketFromString(s);
+            }
+            catch (PacketEventNotSubscribedException e)
+            {
+                Log(e.Message, LogContext.Warn);
             }
             catch (Exception e)
             {

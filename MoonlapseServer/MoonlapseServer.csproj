@@ -9,7 +9,6 @@
     <None Remove="Utils\" />
     <None Remove="Utils\Loggin\" />
     <None Remove="Models\" />
-    <None Remove="Models\Packets\" />
     <None Remove="Newtonsoft.Json" />
     <None Remove="States\" />
     <None Remove="Models\Components\" />
@@ -20,7 +19,6 @@
     <Folder Include="Utils\" />
     <Folder Include="Utils\Logging\" />
     <Folder Include="Models\" />
-    <Folder Include="Models\Packets\" />
     <Folder Include="States\" />
     <Folder Include="Models\Components\" />
   </ItemGroup>
@@ -32,5 +30,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MoonlapseNetworking\MoonlapseNetworking.csproj" />
   </ItemGroup>
 </Project>
