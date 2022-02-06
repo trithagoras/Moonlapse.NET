@@ -1,6 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
 using MoonlapseNetworking.Packets;
+using System.Collections.Generic;
 
 namespace MoonlapseNetworking
 {
@@ -11,18 +11,14 @@ namespace MoonlapseNetworking
     ///
     /// <br></br>
     ///
-    /// To register a handler for packet p, you have to add case to HandlePacketFromString
+    /// To register a handler for packet p, you have to add to map local var
     /// as well as add a PacketEventHandler and register it in child class
     /// </summary>
     public abstract class State
     {
         protected delegate void PacketEventHandler(object sender, PacketEventArgs args);
 
-        public State()
-        {
-        }
-
-        protected event PacketEventHandler LoginPacketEvent, ChatPacketEvent, RegisterPacketEvent;
+        protected event PacketEventHandler LoginPacketEvent, ChatPacketEvent, RegisterPacketEvent, DenyPacketEvent;
 
         public void HandlePacketFromString(string packetString)
         {
@@ -30,27 +26,26 @@ namespace MoonlapseNetworking
             typeString = $"MoonlapseNetworking.Packets.{typeString}";
             var type = Type.GetType(typeString);
 
-            // test here
+            Dictionary<Type, PacketEventHandler> map = new()
+            {
+                { typeof(LoginPacket), LoginPacketEvent },
+                { typeof(RegisterPacket), RegisterPacketEvent },
+                { typeof(ChatPacket), ChatPacketEvent },
+                { typeof(DenyPacket), DenyPacketEvent }
+            };
 
             try
             {
-                // switch statement won't work here
-                if (type == typeof(LoginPacket))
-                {
-                    LoginPacketEvent.Invoke(this, new PacketEventArgs(packetString));
-                }
-                else if (type == typeof(ChatPacket))
-                {
-                    ChatPacketEvent.Invoke(this, new PacketEventArgs(packetString));
-                }
-                else if (type == typeof(RegisterPacket))
-                {
-                    RegisterPacketEvent.Invoke(this, new PacketEventArgs(packetString));
-                }
-                else
-                {
-                    throw new Exception($"Packet type ({typeString}) doesn't exist");
-                }
+                var handler = map[type];
+                handler.Invoke(this, new PacketEventArgs(packetString));
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Exception($"Packet type ({typeString}) doesn't exist");
+            }
+            catch (ArgumentNullException)
+            {
+                throw new Exception($"Packet type ({typeString}) doesn't exist");
             }
             catch (NullReferenceException)
             {

@@ -2,12 +2,12 @@
 using SadConsole;
 namespace MoonlapseClient
 {
-    public class FontController
+    public static class FontController
     {
-        public Font TextFont { get; private set; }
-        public Font GameFont { get; private set; }
+        public static Font TextFont { get; private set; }
+        public static Font GameFont { get; private set; }
 
-        public void Init()
+        public static void Init()
         {
             var fontMaster = Global.LoadFont("Assets/ibm_ext.font");
             TextFont = fontMaster.GetFont(Font.FontSizes.One);

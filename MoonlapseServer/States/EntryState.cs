@@ -66,6 +66,10 @@ namespace MoonlapseServer.States
             if (!IsStringWellFormed(p.Username) || !IsStringWellFormed(p.Password))
             {
                 _protocol.Log($"Login failed: username or password contains whitespace or is empty");
+                _protocol.SendPacket(new DenyPacket
+                {
+                    Message = "Fields cannot contain whitespace"
+                });
                 return;
             }
 
@@ -81,6 +85,10 @@ namespace MoonlapseServer.States
             {
                 // user does not exist
                 _protocol.Log($"Login failed: user with username={p.Username} does not exist");
+                _protocol.SendPacket(new DenyPacket
+                {
+                    Message = "User does not exist or incorrect password"
+                });
             }
             else
             {
@@ -94,6 +102,10 @@ namespace MoonlapseServer.States
                 {
                     // incorrect password
                     _protocol.Log($"Login failed: password incorrect");
+                    _protocol.SendPacket(new DenyPacket
+                    {
+                        Message = "User does not exist or incorrect password"
+                    });
                 }
             }
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MoonlapseServer.States;
 using MoonlapseNetworking;
 using MoonlapseServer.Utils.Logging;
+using MoonlapseNetworking.Packets;
 
 namespace MoonlapseServer
 {
@@ -67,6 +68,21 @@ namespace MoonlapseServer
             }
         }
 
+        public async void SendPacket(Packet p)
+        {
+            try
+            {
+                var sw = new StreamWriter(_client.GetStream());
+                await sw.WriteLineAsync(p.ToString());
+                await sw.FlushAsync();
+
+            }
+            catch (Exception)
+            {
+                Log($"Problem sending {p} to client", LogContext.Error);
+            }
+        }
+
         void ConnectionEnded()
         {
             Log("Client disconnected");
@@ -75,7 +91,7 @@ namespace MoonlapseServer
 
         public void Log(string message, LogContext context = LogContext.Info)
         {
-            Logging.Log(Username ?? "None", message, context);
+            Logging.Log(Username ?? "None", message, context, State.GetType().ToString());
         }
     }
 }

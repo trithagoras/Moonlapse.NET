@@ -41,7 +41,7 @@ namespace MoonlapseServer
 
         static void Log(string message, LogContext context = LogContext.Info)
         {
-            Logging.Log("SERVER", message, context);
+            Logging.Log("SERVER", message, context, "NA");
         }
     }
 }

@@ -6,14 +6,9 @@ namespace MoonlapseClient.Consoles
     {
         Game _game;
 
-        public GameConsole(Game game) : base(Game.Width, Game.Height, game.FontController.GameFont)
+        public GameConsole(Game game) : base(Game.Width, Game.Height, FontController.GameFont)
         {
             _game = game;
-        }
-
-        public void Draw()
-        {
-
         }
     }
 }

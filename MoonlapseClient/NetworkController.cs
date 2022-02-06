@@ -2,8 +2,10 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using MoonlapseNetworking;
+using MoonlapseClient.States;
 
-namespace MoonlapseClient.Networking
+namespace MoonlapseClient
 {
     public class NetworkController
     {
@@ -14,11 +16,14 @@ namespace MoonlapseClient.Networking
 
         public string ErrorMessage { get; private set; }
 
+        public State CurrentState { get; private set; }
+
         public NetworkController(string hostname, int port)
         {
             Hostname = hostname;
             Port = port;
             _client = new TcpClient();
+            CurrentState = new EntryState(this);
         }
 
         public async Task Start()
@@ -40,10 +45,12 @@ namespace MoonlapseClient.Networking
             {
                 try
                 {
-                    string s = await sr.ReadLineAsync();
+                    string line;
 
-                    // if DenyPacket, ErrorMessage = packet.Message
-                    Console.WriteLine(s);
+                    while ((line = await sr.ReadLineAsync()) != null)
+                    {
+                        CurrentState.HandlePacketFromString(line);
+                    }
                 }
                 catch (Exception)
                 {
@@ -53,7 +60,7 @@ namespace MoonlapseClient.Networking
             }
         }
 
-        public async void SendLine(string s)
+        public async Task SendLine(string s)
         {
             try
             {

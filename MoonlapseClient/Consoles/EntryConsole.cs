@@ -1,20 +1,22 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using SadConsole.Controls;
+using MoonlapseClient.States;
+using MoonlapseNetworking.Packets;
 
 namespace MoonlapseClient.Consoles
 {
     public class EntryConsole : SadConsole.ControlsConsole
     {
-        Game _game;
+        readonly EntryState _state;
 
         readonly TextBox UsernameTextBox, PasswordTextBox;
         readonly Button RegisterButton, LoginButton;
         readonly Label ErrorLabel;
 
-        public EntryConsole(Game game) : base(Game.Width, Game.Height, game.FontController.TextFont)
+        public EntryConsole(EntryState state) : base(Game.Width, Game.Height, FontController.TextFont)
         {
-            _game = game;
+            _state = state;
 
             ThemeColors = SadConsole.Themes.Library.Default.Colors;
             ThemeColors.ControlBack = Color.Black;
@@ -53,7 +55,7 @@ namespace MoonlapseClient.Consoles
                 Position = new Point(4, 6),
                 TextColor = Color.Red,
             };
-            SetErrorLabel(_game.NetworkController.ErrorMessage);
+            SetErrorLabel(_state.ErrorMessage);
             Add(ErrorLabel);
 
             ThemeColors.RebuildAppearances();
@@ -69,8 +71,12 @@ namespace MoonlapseClient.Consoles
             }
 
             // send to server
-            var loginpacket = $"LoginPacket:{{\"Username\":\"{UsernameTextBox.Text}\",\"Password\":\"{PasswordTextBox.Text}\"}}";
-            _game.NetworkController.SendLine(loginpacket);
+            var loginPacket = new LoginPacket
+            {
+                Username = UsernameTextBox.Text,
+                Password = PasswordTextBox.Text
+            };
+            _ = _state.Login(loginPacket);
         }
 
         protected override void OnInvalidate()
@@ -86,7 +92,7 @@ namespace MoonlapseClient.Consoles
             Print(4, 10, "Password: ", colors.White);
         }
 
-        void SetErrorLabel(string s, bool error = true)
+        public void SetErrorLabel(string s, bool error = true)
         {
             ErrorLabel.TextColor = error ? ThemeColors.Red : ThemeColors.Cyan;
             ErrorLabel.DisplayText = s;
