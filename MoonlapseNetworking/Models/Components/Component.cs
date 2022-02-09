@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MoonlapseNetworking.ServerModels.Components
+namespace MoonlapseNetworking.Models.Components
 {
     public class Component
     {

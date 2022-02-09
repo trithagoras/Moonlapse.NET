@@ -3,8 +3,8 @@ using System.Linq;
 using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
 using MoonlapseServer.Utils.Logging;
-using MoonlapseNetworking.ServerModels;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models;
+using MoonlapseNetworking.Models.Components;
 using Microsoft.EntityFrameworkCore;
 
 namespace MoonlapseServer.States

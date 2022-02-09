@@ -1,5 +1,5 @@
 ﻿using System;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models.Components;
 using Microsoft.Xna.Framework;
 
 namespace MoonlapseClient.ClientComponents

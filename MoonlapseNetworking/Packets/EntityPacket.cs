@@ -1,5 +1,5 @@
 ﻿using System;
-using MoonlapseNetworking.ServerModels;
+using MoonlapseNetworking.Models;
 using Newtonsoft.Json;
 
 namespace MoonlapseNetworking.Packets

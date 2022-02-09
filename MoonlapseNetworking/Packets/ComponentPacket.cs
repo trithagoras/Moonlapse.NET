@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models.Components;
 namespace MoonlapseNetworking.Packets
 {
     public class ComponentPacket : Packet

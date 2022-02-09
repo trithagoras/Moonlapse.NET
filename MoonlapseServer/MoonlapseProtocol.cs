@@ -6,10 +6,10 @@ using MoonlapseServer.States;
 using MoonlapseNetworking;
 using MoonlapseServer.Utils.Logging;
 using MoonlapseNetworking.Packets;
-using MoonlapseNetworking.ServerModels;
+using MoonlapseNetworking.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models.Components;
 
 namespace MoonlapseServer
 {

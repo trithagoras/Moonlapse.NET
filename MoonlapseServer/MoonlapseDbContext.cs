@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using MoonlapseNetworking.ServerModels;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models;
+using MoonlapseNetworking.Models.Components;
 
 namespace MoonlapseServer
 {

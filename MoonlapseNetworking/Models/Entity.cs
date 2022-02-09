@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models.Components;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
-namespace MoonlapseNetworking.ServerModels
+namespace MoonlapseNetworking.Models
 {
     public class Entity
     {

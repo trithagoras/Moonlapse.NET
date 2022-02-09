@@ -14,7 +14,7 @@ namespace MoonlapseClient
             Global.FontDefault = TextFont;
 
             // loading and setting game font to 1 bit tileset
-            fontMaster = Global.LoadFont("Assets/1bit.font");
+            fontMaster = Global.LoadFont("Assets/colored_packed.font");
             GameFont = fontMaster.GetFont(Font.FontSizes.Two);
             Global.FontDefault = GameFont;
         }

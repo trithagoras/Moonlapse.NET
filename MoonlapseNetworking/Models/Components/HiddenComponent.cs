@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MoonlapseNetworking.ServerModels.Components
+namespace MoonlapseNetworking.Models.Components
 {
     /// <summary>
     /// A component with this attribute will not be included in the serialized

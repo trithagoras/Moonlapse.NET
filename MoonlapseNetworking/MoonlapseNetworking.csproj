@@ -10,14 +10,22 @@
     <None Remove="Models\" />
     <None Remove="Models\Components\" />
     <None Remove="Rooms\" />
+    <None Remove="System.Drawing.Common" />
+    <None Remove="SixLabors.ImageSharp" />
+    <None Remove="CsvHelper" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Packets\" />
-    <Folder Include="ServerModels\" />
-    <Folder Include="ServerModels\Components\" />
+    <Folder Include="Models\" />
+    <Folder Include="Models\Components\" />
     <Folder Include="Rooms\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Rooms\Garden\Terrain.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

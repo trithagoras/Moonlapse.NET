@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using MoonlapseServer.Utils.Logging;
-using MoonlapseNetworking.ServerModels;
+using MoonlapseNetworking.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

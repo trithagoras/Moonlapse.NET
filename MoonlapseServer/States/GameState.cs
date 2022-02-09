@@ -1,8 +1,8 @@
 ﻿using System;
 using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
-using MoonlapseNetworking.ServerModels;
-using MoonlapseNetworking.ServerModels.Components;
+using MoonlapseNetworking.Models;
+using MoonlapseNetworking.Models.Components;
 
 namespace MoonlapseServer.States
 {
@@ -16,11 +16,23 @@ namespace MoonlapseServer.States
         {
             _protocol = protocol;
             ChatPacketEvent += MainState_ChatPacketEvent;
+            MovePacketEvent += GameState_MovePacketEvent;
 
             _protocol.SendPacket(new EntityPacket { Entity = _protocol.PlayerEntity });
             _protocol.SendPacket(new ComponentPacket { Component = _protocol.PlayerEntity.GetComponent<Position>() });
 
             RoomEntered();
+        }
+
+        private void GameState_MovePacketEvent(object sender, PacketEventArgs args)
+        {
+            // todo: check for collision :woozy_face:
+            var p = Packet.FromString<MovePacket>(args.PacketString);
+            _protocol.Log($"Received Move Packet: ({p.Dx},{p.Dy})");
+
+            var pos = _protocol.PlayerEntity.GetComponent<Position>();
+            pos.X += p.Dx;
+            pos.Y += p.Dy;
         }
 
         void MainState_ChatPacketEvent(object sender, PacketEventArgs args)

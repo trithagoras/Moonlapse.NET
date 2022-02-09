@@ -20,7 +20,7 @@ namespace MoonlapseNetworking
         protected delegate void PacketEventHandler(object sender, PacketEventArgs args);
 
         protected event PacketEventHandler LoginPacketEvent, ChatPacketEvent, RegisterPacketEvent,
-            DenyPacketEvent, OkPacketEvent, EntityPacketEvent, ComponentPacketEvent;
+            DenyPacketEvent, OkPacketEvent, EntityPacketEvent, ComponentPacketEvent, MovePacketEvent;
 
         public void HandlePacketFromString(string packetString)
         {
@@ -36,7 +36,8 @@ namespace MoonlapseNetworking
                 { typeof(DenyPacket), DenyPacketEvent },
                 { typeof(OkPacket), OkPacketEvent },
                 { typeof(EntityPacket), EntityPacketEvent },
-                { typeof(ComponentPacket), ComponentPacketEvent }
+                { typeof(ComponentPacket), ComponentPacketEvent },
+                { typeof(MovePacket), MovePacketEvent }
             };
 
             try

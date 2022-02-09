@@ -13,12 +13,32 @@
     <None Remove="Consoles\" />
     <None Remove="States\" />
     <None Remove="ClientComponents\" />
+    <None Remove="TiledCS" />
+    <None Remove="SixLabors.ImageSharp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Consoles\" />
     <Folder Include="States\" />
     <Folder Include="ClientComponents\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\MoonlapseNetworking\Rooms\Garden\Solid.png">
+      <Link>Assets\Rooms\Garden\Solid.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\MoonlapseNetworking\Rooms\Garden\Ceiling.png">
+      <Link>Assets\Rooms\Garden\Ceiling.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\MoonlapseNetworking\Rooms\Garden\Ground.png">
+      <Link>Assets\Rooms\Garden\Ground.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\MoonlapseNetworking\Rooms\Garden\Terrain.csv">
+      <Link>Assets\Rooms\Garden\Terrain.csv</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Update="Assets\1bit.font">
@@ -31,6 +51,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\IBM8x16_NoPadding_extended.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\monochrome-transparent_packed.tsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\colored_packed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\colored_packed.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
