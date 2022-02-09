@@ -15,12 +15,14 @@
     <None Remove="Microsoft.EntityFrameworkCore" />
     <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
     <None Remove="ServerComponents\" />
+    <None Remove="Assets\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />
     <Folder Include="Utils\Logging\" />
     <Folder Include="States\" />
     <Folder Include="ServerComponents\" />
+    <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
@@ -33,5 +35,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MoonlapseNetworking\MoonlapseNetworking.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\MoonlapseNetworking\Rooms\Garden\Terrain.csv">
+      <Link>Assets\Rooms\Garden\Terrain.csv</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

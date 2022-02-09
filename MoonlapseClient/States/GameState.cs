@@ -19,8 +19,6 @@ namespace MoonlapseClient.States
 
         public Dictionary<int, Entity> KnownEntities { get; }
 
-        public Room Room;
-
         public Entity PlayerEntity { get; private set; }
 
         public GameState(NetworkController nc)
@@ -33,27 +31,39 @@ namespace MoonlapseClient.States
 
             KnownEntities = new Dictionary<int, Entity>();
 
-            // todo: TESTING ONLY: THIS SHOULD BE SENT AS A PACKET
-            Room = new Room
-            {
-                Name = "Garden"
-            };
-            Room.Unpack();
-
             EntityPacketEvent += GameState_EntityPacketEvent;
             ComponentPacketEvent += GameState_ComponentPacketEvent;
+            PlayerLeftPacketEvent += GameState_PlayerLeftPacketEvent;
+
             _ = _networkController.SendPacket(new OkPacket());
 
             Global.CurrentScreen = _console;
             SadConsole.Game.OnUpdate = OnUpdate;
         }
 
+        private void GameState_PlayerLeftPacketEvent(object sender, PacketEventArgs args)
+        {
+            var p = Packet.FromString<PlayerLeftPacket>(args.PacketString);
+            KnownEntities.Remove(p.EntityId);
+        }
+
         void GameState_ComponentPacketEvent(object sender, PacketEventArgs args)
         {
+            System.Console.WriteLine($"Receieved from Server: {args.PacketString}");
             var p = Packet.FromString<ComponentPacket>(args.PacketString);
             var c = p.Component;
             var e = KnownEntities[c.Entity.Id];
             e.SetComponent(c);
+
+            // if was sent player position, then unpack room
+            if (c == PlayerEntity.GetComponent<Position>())
+            {
+                var pos = c as Position;
+                if (!pos.Room.Unpacked)
+                {
+                    pos.Room.Unpack();
+                }
+            }
         }
 
         void GameState_EntityPacketEvent(object sender, PacketEventArgs args)
@@ -90,7 +100,7 @@ namespace MoonlapseClient.States
                     Dx = dx,
                     Dy = dy
                 };
-                _ = _networkController.SendPacket(movePacket);
+                _networkController.SendPacket(movePacket);
 
                 var pos = PlayerEntity.GetComponent<Position>();
                 pos.X += dx;

@@ -42,9 +42,9 @@ namespace MoonlapseServer.States
                 return;
             }
 
-            var db = new MoonlapseDbContext();
-
             _protocol.Log($"Attempting registration with username={p.Username}");
+
+            var db = _protocol.Server.Db;
 
             var user = db.Users
                 .Where(e => e.Username == p.Username)
@@ -60,7 +60,14 @@ namespace MoonlapseServer.States
                     TypeName = "Player"
                 };
                 db.Add(e);
-                db.Add(e.AddComponent<Position>());
+
+                var initialRoom = db.Rooms
+                    .Where(r => r.Id == 1)
+                    .First();
+
+                var pos = e.AddComponent<Position>();
+                pos.Room = initialRoom;
+                db.Add(pos);
 
                 var u = new User
                 {
@@ -95,7 +102,7 @@ namespace MoonlapseServer.States
                 return;
             }
 
-            var db = new MoonlapseDbContext();
+            var db = _protocol.Server.Db;
 
             _protocol.Log($"Attempting login with username={p.Username}");
 
@@ -122,8 +129,22 @@ namespace MoonlapseServer.States
                         .Where(e => e == user.Entity)
                         .First();
 
-                    _protocol.Login(entity);
-                    _readyToChangeState = true;
+                    // if player is already logged in
+                    if (_protocol.Server.ConnectedProtocols
+                        .Where(p => p.PlayerEntity == entity)
+                        .FirstOrDefault() != null)
+                    {
+                        _protocol.Log($"Login failed: user already logged in");
+                        _protocol.SendPacket(new DenyPacket
+                        {
+                            Message = "User already logged in"
+                        });
+                    }
+                    else
+                    {
+                        _protocol.Login(entity);
+                        _readyToChangeState = true;
+                    }
                 }
                 else
                 {

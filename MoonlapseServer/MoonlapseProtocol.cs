@@ -77,7 +77,7 @@ namespace MoonlapseServer
             }
         }
 
-        public async void SendPacket(Packet p)
+        public async Task SendPacket(Packet p)
         {
             try
             {
@@ -92,10 +92,25 @@ namespace MoonlapseServer
             }
         }
 
+        public async Task Broadcast(Packet p)
+        {
+            // todo: add include list param. For now, this excludes self
+            foreach (var proto in Server.ConnectedProtocols)
+            {
+                if (proto == this)
+                {
+                    continue;
+                }
+
+                await proto.SendPacket(p);
+            }
+        }
+
         void ConnectionEnded()
         {
             Log("Client disconnected");
             Server.ConnectedProtocols.Remove(this);
+            _ = Broadcast(new PlayerLeftPacket { EntityId = PlayerEntity.Id } );
         }
 
         public void Log(string message, LogContext context = LogContext.Info)

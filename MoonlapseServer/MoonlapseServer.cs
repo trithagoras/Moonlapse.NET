@@ -7,6 +7,7 @@ using MoonlapseServer.Utils.Logging;
 using MoonlapseNetworking.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MoonlapseNetworking.Models.Components;
 
 namespace MoonlapseServer
 {
@@ -17,16 +18,24 @@ namespace MoonlapseServer
 
         public readonly ISet<Protocol> ConnectedProtocols;
 
-        readonly TcpListener _listener;
+        public Dictionary<int, Room> Rooms;
 
-        public Dictionary<int, Entity> RoomEntities { get; }
+        public readonly MoonlapseDbContext Db;
+        const int DbSaveChangesTimer = 30;  // Db changes are saved every 30s
+
+        readonly TcpListener _listener;
 
         public Server()
         {
             var ip = IPAddress.Parse(Host);
             ConnectedProtocols = new HashSet<Protocol>();
+
+            Db = new MoonlapseDbContext();
+            SaveChangesToDb();
+
+            Rooms = new Dictionary<int, Room>();
+            LoadRooms();
             _listener = new TcpListener(ip, Port);
-            RoomEntities = new Dictionary<int, Entity>();
         }
 
         public async Task Start()
@@ -45,16 +54,28 @@ namespace MoonlapseServer
             }
         }
 
+        public void LoadRooms()
+        {
+            var rooms = Db.Rooms
+                .ToList();
+
+            foreach (var room in rooms)
+            {
+                Rooms[room.Id] = room;
+                room.Unpack();
+
+            }
+        }
+
         /// <summary>
         /// Loads ALL components from DB that belongs to entity and sets them.
         /// </summary>
         /// <param name="entity"></param>
-        public static void LoadEntity(Entity entity)
+        public void LoadEntity(Entity entity)
         {
-            var db = new MoonlapseDbContext();
-
-            var components = db.Components
+            var components = Db.Components
                 .Include(c => c.Entity)
+                .Include(pos => (pos as Position).Room)
                 .Where(c => c.Entity == entity)
                 .ToList();
 
@@ -62,6 +83,25 @@ namespace MoonlapseServer
             {
                 entity.SetComponent(component);
             }
+        }
+
+        async Task SaveChangesToDb()
+        {
+            while (true)
+            {
+                await Task.Delay(DbSaveChangesTimer * 1000);
+                try
+                {
+                    var changes = await Db.SaveChangesAsync();
+                    Log($"Saved {changes} changes to db");
+
+                }
+                catch (Exception e)
+                {
+                    Log(e.Message);
+                }
+            }
+            
         }
 
         static void Log(string message, LogContext context = LogContext.Info)

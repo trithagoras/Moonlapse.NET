@@ -23,9 +23,44 @@ namespace MoonlapseClient.Consoles
             DrawTerrain();
 
             // todo: draw all entities
+            DrawEntities();
 
             // draw player last
             SetGlyph((Game.Width / 8) - 1, (Game.Height / 4) - 1, 77);
+        }
+
+        void DrawEntities()
+        {
+            foreach (var entity in _state.KnownEntities.Values)
+            {
+                if (entity == _state.PlayerEntity)
+                {
+                    continue;
+                }
+
+                var pPos = _state.PlayerEntity.GetComponent<Position>();
+                var ePos = entity.GetComponent<Position>();
+
+                // either entity has no position component or not loaded yet
+                if (ePos == null)
+                {
+                    continue;
+                }
+
+                // Draw other players on top of all else
+                if (entity.TypeName == "Player")
+                {
+                    int halfWidth = (Game.Width / 8) - 1;
+                    int halfHeight = (Game.Height / 4) - 1;
+
+                    // todo: check viewport
+
+                    var cx = halfWidth + ePos.X - pPos.X;
+                    var cy = halfHeight + ePos.Y - pPos.Y;
+
+                    SetGlyph(cx, cy, 77);
+                }
+            }
         }
 
         void DrawTerrain()
@@ -36,6 +71,7 @@ namespace MoonlapseClient.Consoles
             }
             var playerX = _state.PlayerEntity.GetComponent<Position>().X;
             var playerY = _state.PlayerEntity.GetComponent<Position>().Y;
+            var room = _state.PlayerEntity.GetComponent<Position>().Room;
 
             var viewRadius = 10;
 
@@ -46,7 +82,7 @@ namespace MoonlapseClient.Consoles
                     var xx = playerX + x;
                     var yy = playerY + y;
 
-                    if (!_state.Room.CoordinateExists(xx, yy))
+                    if (!room.CoordinateExists(xx, yy))
                     {
                         continue;
                     }
@@ -56,7 +92,7 @@ namespace MoonlapseClient.Consoles
                     int cx = x + halfWidth;
                     int cy = y + halfHeight;
 
-                    var pixel = _state.Room.Terrain[yy, xx];
+                    var pixel = room.Terrain[yy, xx];
                     SetGlyph(cx, cy, pixel);
                 }
             }

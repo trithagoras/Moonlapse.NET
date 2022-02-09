@@ -9,5 +9,9 @@ namespace MoonlapseNetworking.Models.Components
         public int X { get; set; }
 
         public int Y { get; set; }
+
+        [Required]
+        [ForeignKey("RoomId")]
+        public Room Room { get; set; }
     }
 }

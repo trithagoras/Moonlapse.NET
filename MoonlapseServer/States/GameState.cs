@@ -3,6 +3,8 @@ using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
 using MoonlapseNetworking.Models;
 using MoonlapseNetworking.Models.Components;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MoonlapseServer.States
 {
@@ -10,16 +12,11 @@ namespace MoonlapseServer.States
     {
         Protocol _protocol;
 
-        // Room => _protocol.PlayerEntity.GetComponent<Position>().Room;
-
         public GameState(Protocol protocol)
         {
             _protocol = protocol;
             ChatPacketEvent += MainState_ChatPacketEvent;
             MovePacketEvent += GameState_MovePacketEvent;
-
-            _protocol.SendPacket(new EntityPacket { Entity = _protocol.PlayerEntity });
-            _protocol.SendPacket(new ComponentPacket { Component = _protocol.PlayerEntity.GetComponent<Position>() });
 
             RoomEntered();
         }
@@ -33,6 +30,9 @@ namespace MoonlapseServer.States
             var pos = _protocol.PlayerEntity.GetComponent<Position>();
             pos.X += p.Dx;
             pos.Y += p.Dy;
+
+            // broadcast new position to other entities (todo: only within our viewport)
+            _protocol.Broadcast(new ComponentPacket { Component = pos });
         }
 
         void MainState_ChatPacketEvent(object sender, PacketEventArgs args)
@@ -43,19 +43,32 @@ namespace MoonlapseServer.States
         }
 
         // This gets called whenever entering room for first time.
-        void RoomEntered()
+        async Task RoomEntered()
         {
-            foreach (var entity in _protocol.Server.RoomEntities.Values)
+            // todo: this better
+
+            var ep = new EntityPacket { Entity = _protocol.PlayerEntity };
+            var cp = new ComponentPacket { Component = _protocol.PlayerEntity.GetComponent<Position>() };
+
+            await _protocol.SendPacket(ep);
+            await _protocol.SendPacket(cp);
+            await _protocol.Broadcast(ep);
+            await _protocol.Broadcast(cp);
+
+            var room = _protocol.Server.Rooms[(cp.Component as Position).Room.Id];
+            room.Entities[ep.Entity.Id] = ep.Entity;
+
+            foreach (var entity in room.Entities.Values)
             {
                 if (entity == _protocol.PlayerEntity)
                 {
                     continue;
                 }
 
-                _protocol.SendPacket(new EntityPacket { Entity = entity });
+                await _protocol.SendPacket(new EntityPacket { Entity = entity });
 
-                // foreach c in components: sendpacket ??
-                _protocol.SendPacket(new ComponentPacket { Component = entity.GetComponent<Position>() });
+                // todo: consider foreach c in components: sendpacket ??
+                await _protocol.SendPacket(new ComponentPacket { Component = entity.GetComponent<Position>() });
             }
         }
     }

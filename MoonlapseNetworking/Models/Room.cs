@@ -31,16 +31,13 @@ namespace MoonlapseNetworking.Models
         [JsonIgnore]
         public int[,] Terrain { get; private set; }
 
-        public Room()
-        {
-            Entities = new Dictionary<int, Entity>();
-        }
-
         public void Unpack()
         {
             // To know: [project]/Assets/Rooms/[Name] exists physically in MoonlapseNetworking, but a link
             // is added to MoonlapseClient and MoonlapseServer. Any changes to the physical file will
             // cascade to the other projects.
+
+            Entities = new Dictionary<int, Entity>();
 
             var buildDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var path = System.IO.Path.Join(buildDir, "Assets", "Rooms", Name, "Terrain.csv");

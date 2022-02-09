@@ -11,6 +11,7 @@ namespace MoonlapseServer
         public DbSet<Entity> Entities { get; set; }
         public DbSet<Component> Components { get; set; }
         public DbSet<Position> PositionComponents { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
         public string DbPath { get; }
 
@@ -25,5 +26,10 @@ namespace MoonlapseServer
         // special "local" folder for your platform.
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Room>().HasData(new Room { Id = 1, Name = "Garden" });
+        }
     }
 }
