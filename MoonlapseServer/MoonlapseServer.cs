@@ -31,7 +31,7 @@ namespace MoonlapseServer
             ConnectedProtocols = new HashSet<Protocol>();
 
             Db = new MoonlapseDbContext();
-            SaveChangesToDb();
+            Task.Run(SaveChangesToDb);
 
             Rooms = new Dictionary<int, Room>();
             LoadRooms();

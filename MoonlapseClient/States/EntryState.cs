@@ -48,14 +48,14 @@ namespace MoonlapseClient.States
             _console.SetErrorLabel(ErrorMessage);
         }
 
-        public async Task Register(RegisterPacket p)
+        public void Register(RegisterPacket p)
         {
-            await _networkController.SendPacket(p);
+            _networkController.SendPacket(p);
         }
 
-        public async Task Login(LoginPacket p)
+        public void Login(LoginPacket p)
         {
-            await _networkController.SendPacket(p);
+            _networkController.SendPacket(p);
         }
     }
 }

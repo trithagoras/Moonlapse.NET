@@ -61,13 +61,13 @@ namespace MoonlapseClient
             }
         }
 
-        public async Task SendPacket(Packet p)
+        public void SendPacket(Packet p)
         {
             try
             {
                 var sw = new StreamWriter(_client.GetStream());
-                await sw.WriteLineAsync(p.ToString());
-                await sw.FlushAsync();
+                sw.WriteLine(p.ToString());
+                sw.Flush();
             }
             catch (Exception)
             {

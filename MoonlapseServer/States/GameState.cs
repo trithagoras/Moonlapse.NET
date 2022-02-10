@@ -1,10 +1,7 @@
 ﻿using System;
 using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
-using MoonlapseNetworking.Models;
 using MoonlapseNetworking.Models.Components;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace MoonlapseServer.States
 {
@@ -21,7 +18,7 @@ namespace MoonlapseServer.States
             RoomEntered();
         }
 
-        private void GameState_MovePacketEvent(object sender, PacketEventArgs args)
+        void GameState_MovePacketEvent(object sender, PacketEventArgs args)
         {
             // todo: check for collision :woozy_face:
             var p = Packet.FromString<MovePacket>(args.PacketString);
@@ -43,17 +40,17 @@ namespace MoonlapseServer.States
         }
 
         // This gets called whenever entering room for first time.
-        async Task RoomEntered()
+        void RoomEntered()
         {
             // todo: this better
 
             var ep = new EntityPacket { Entity = _protocol.PlayerEntity };
             var cp = new ComponentPacket { Component = _protocol.PlayerEntity.GetComponent<Position>() };
 
-            await _protocol.SendPacket(ep);
-            await _protocol.SendPacket(cp);
-            await _protocol.Broadcast(ep);
-            await _protocol.Broadcast(cp);
+            _protocol.SendPacket(ep);
+            _protocol.SendPacket(cp);
+            _protocol.Broadcast(ep);
+            _protocol.Broadcast(cp);
 
             var room = _protocol.Server.Rooms[(cp.Component as Position).Room.Id];
             room.Entities[ep.Entity.Id] = ep.Entity;
@@ -65,10 +62,10 @@ namespace MoonlapseServer.States
                     continue;
                 }
 
-                await _protocol.SendPacket(new EntityPacket { Entity = entity });
+                _protocol.SendPacket(new EntityPacket { Entity = entity });
 
                 // todo: consider foreach c in components: sendpacket ??
-                await _protocol.SendPacket(new ComponentPacket { Component = entity.GetComponent<Position>() });
+                _protocol.SendPacket(new ComponentPacket { Component = entity.GetComponent<Position>() });
             }
         }
     }

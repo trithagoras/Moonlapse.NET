@@ -76,7 +76,7 @@ namespace MoonlapseClient.Consoles
                 Username = UsernameTextBox.Text,
                 Password = PasswordTextBox.Text
             };
-            _ = _state.Register(registerPacket);
+            _state.Register(registerPacket);
         }
 
         void LoginButton_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace MoonlapseClient.Consoles
                 Username = UsernameTextBox.Text,
                 Password = PasswordTextBox.Text
             };
-            _ = _state.Login(loginPacket);
+            _state.Login(loginPacket);
         }
 
         protected override void OnInvalidate()

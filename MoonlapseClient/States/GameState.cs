@@ -35,7 +35,7 @@ namespace MoonlapseClient.States
             ComponentPacketEvent += GameState_ComponentPacketEvent;
             PlayerLeftPacketEvent += GameState_PlayerLeftPacketEvent;
 
-            _ = _networkController.SendPacket(new OkPacket());
+            _networkController.SendPacket(new OkPacket());
 
             Global.CurrentScreen = _console;
             SadConsole.Game.OnUpdate = OnUpdate;
