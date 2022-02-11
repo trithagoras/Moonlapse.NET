@@ -106,7 +106,7 @@ namespace MoonlapseClient.States
                 pos.X += dx;
                 pos.Y += dy;
             }
-            
+
         }
     }
 }

@@ -16,14 +16,3 @@ namespace MoonlapseServer.Utils.Logging
         }
     }
 }
-
-
-//class LogContext :
-//    INFO = "INFO"
-//    WARN = "WARN"
-//    ERROR = "ERROR"
-
-
-//def log(client: str, s: str, logcontext: LogContext) -> None:
-//now = datetime.datetime.utcnow()
-//    print(f"{now.year}-{now.month:02}-{now.day:02}T{now.hour:02}:{now.minute:02}:{now.second:02} | {logcontext} | clientId={client} | {s}")

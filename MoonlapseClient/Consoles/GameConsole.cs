@@ -13,6 +13,7 @@ namespace MoonlapseClient.Consoles
         public GameConsole(GameState state) : base(Game.Width, Game.Height, FontController.GameFont)
         {
             _state = state;
+            IsCursorDisabled = true;
         }
 
         public override void Draw(TimeSpan timeElapsed)
@@ -31,6 +32,11 @@ namespace MoonlapseClient.Consoles
 
         void DrawEntities()
         {
+            if (_state.PlayerEntity == null)
+            {
+                return;
+            }
+
             foreach (var entity in _state.KnownEntities.Values)
             {
                 if (entity == _state.PlayerEntity)
@@ -42,7 +48,7 @@ namespace MoonlapseClient.Consoles
                 var ePos = entity.GetComponent<Position>();
 
                 // either entity has no position component or not loaded yet
-                if (ePos == null)
+                if (pPos == null || ePos == null)
                 {
                     continue;
                 }
