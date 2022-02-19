@@ -13,7 +13,7 @@ namespace MoonlapseServer
 {
     public class Server
     {
-        public const string Host = "127.0.0.1";
+        public const string Host = "0.0.0.0";
         public const int Port = 42523;
 
         public readonly ISet<Protocol> ConnectedProtocols;
