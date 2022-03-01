@@ -4,9 +4,9 @@ using MoonlapseClient.Consoles;
 using System.Threading.Tasks;
 using SadConsole;
 
-namespace MoonlapseClient.States
+namespace MoonlapseClient.UserStates
 {
-    public class EntryState : State
+    public class EntryState : UserState
     {
         readonly EntryConsole _console;
         readonly NetworkController _networkController;

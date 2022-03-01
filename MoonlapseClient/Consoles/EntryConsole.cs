@@ -1,22 +1,22 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using SadConsole.Controls;
-using MoonlapseClient.States;
+using MoonlapseClient.UserStates;
 using MoonlapseNetworking.Packets;
 
 namespace MoonlapseClient.Consoles
 {
     public class EntryConsole : SadConsole.ControlsConsole
     {
-        readonly EntryState _state;
+        readonly EntryState _userState;
 
         readonly TextBox UsernameTextBox, PasswordTextBox;
         readonly Button RegisterButton, LoginButton;
         readonly Label ErrorLabel;
 
-        public EntryConsole(EntryState state) : base(Game.Width, Game.Height, FontController.TextFont)
+        public EntryConsole(EntryState userState) : base(Game.Width, Game.Height, FontController.TextFont)
         {
-            _state = state;
+            _userState = userState;
 
             ThemeColors = SadConsole.Themes.Library.Default.Colors;
             ThemeColors.ControlBack = Color.Black;
@@ -55,7 +55,7 @@ namespace MoonlapseClient.Consoles
                 Position = new Point(4, 6),
                 TextColor = Color.Red,
             };
-            SetErrorLabel(_state.ErrorMessage);
+            SetErrorLabel(_userState.ErrorMessage);
             Add(ErrorLabel);
 
             ThemeColors.RebuildAppearances();
@@ -76,7 +76,7 @@ namespace MoonlapseClient.Consoles
                 Username = UsernameTextBox.Text,
                 Password = PasswordTextBox.Text
             };
-            _state.Register(registerPacket);
+            _userState.Register(registerPacket);
         }
 
         void LoginButton_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace MoonlapseClient.Consoles
                 Username = UsernameTextBox.Text,
                 Password = PasswordTextBox.Text
             };
-            _state.Login(loginPacket);
+            _userState.Login(loginPacket);
         }
 
         protected override void OnInvalidate()

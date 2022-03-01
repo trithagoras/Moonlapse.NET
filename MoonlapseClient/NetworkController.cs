@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using MoonlapseNetworking;
-using MoonlapseClient.States;
+using MoonlapseClient.UserStates;
 using MoonlapseNetworking.Packets;
 
 namespace MoonlapseClient
@@ -17,7 +17,7 @@ namespace MoonlapseClient
 
         public string ErrorMessage { get; private set; }
 
-        public State CurrentState { get; set; }
+        public UserState CurrentState { get; set; }
 
         public NetworkController(string hostname, int port)
         {

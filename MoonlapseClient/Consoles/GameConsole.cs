@@ -1,6 +1,6 @@
 ﻿using System;
 using SadConsole;
-using MoonlapseClient.States;
+using MoonlapseClient.UserStates;
 using MoonlapseNetworking.Models.Components;
 using MoonlapseNetworking.Models;
 
@@ -8,11 +8,11 @@ namespace MoonlapseClient.Consoles
 {
     public class GameConsole : SadConsole.Console
     {
-        readonly GameState _state;
+        readonly GameState _userState;
 
-        public GameConsole(GameState state) : base(Game.Width, Game.Height, FontController.GameFont)
+        public GameConsole(GameState userState) : base(Game.Width, Game.Height, FontController.GameFont)
         {
-            _state = state;
+            _userState = userState;
             IsCursorDisabled = true;
         }
 
@@ -32,19 +32,19 @@ namespace MoonlapseClient.Consoles
 
         void DrawEntities()
         {
-            if (_state.PlayerEntity == null)
+            if (_userState.PlayerEntity == null)
             {
                 return;
             }
 
-            foreach (var entity in _state.KnownEntities.Values)
+            foreach (var entity in _userState.KnownEntities.Values)
             {
-                if (entity == _state.PlayerEntity)
+                if (entity == _userState.PlayerEntity)
                 {
                     continue;
                 }
 
-                var pPos = _state.PlayerEntity.GetComponent<Position>();
+                var pPos = _userState.PlayerEntity.GetComponent<Position>();
                 var ePos = entity.GetComponent<Position>();
 
                 // either entity has no position component or not loaded yet
@@ -71,13 +71,13 @@ namespace MoonlapseClient.Consoles
 
         void DrawTerrain()
         {
-            if (_state.PlayerEntity == null || _state.PlayerEntity.GetComponent<Position>() == null)
+            if (_userState.PlayerEntity == null || _userState.PlayerEntity.GetComponent<Position>() == null)
             {
                 return;
             }
-            var playerX = _state.PlayerEntity.GetComponent<Position>().X;
-            var playerY = _state.PlayerEntity.GetComponent<Position>().Y;
-            var room = _state.PlayerEntity.GetComponent<Position>().Room;
+            var playerX = _userState.PlayerEntity.GetComponent<Position>().X;
+            var playerY = _userState.PlayerEntity.GetComponent<Position>().Y;
+            var room = _userState.PlayerEntity.GetComponent<Position>().Room;
 
             var viewRadius = 10;
 

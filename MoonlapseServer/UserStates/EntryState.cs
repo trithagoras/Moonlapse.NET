@@ -7,9 +7,9 @@ using MoonlapseNetworking.Models;
 using MoonlapseNetworking.Models.Components;
 using Microsoft.EntityFrameworkCore;
 
-namespace MoonlapseServer.States
+namespace MoonlapseServer.UserStates
 {
-    public class EntryState : State
+    public class EntryState : UserState
     {
         Protocol _protocol;
 
@@ -27,7 +27,7 @@ namespace MoonlapseServer.States
         {
             if (_readyToChangeState)
             {
-                _protocol.State = new GameState(_protocol);
+                _protocol.UserState = new GameState(_protocol);
             }
         }
 

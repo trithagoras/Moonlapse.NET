@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
@@ -31,10 +33,8 @@ namespace MoonlapseServer
             ConnectedProtocols = new HashSet<Protocol>();
 
             Db = new MoonlapseDbContext();
-            Task.Run(SaveChangesToDb);
 
             Rooms = new Dictionary<int, Room>();
-            LoadRooms();
             _listener = new TcpListener(ip, Port);
         }
 
@@ -43,6 +43,9 @@ namespace MoonlapseServer
             Log("Starting MoonlapseServer");
             _listener.Start();
 
+            LoadRooms();
+            Task.Run(SaveChangesToDb);
+
             // main accept loop
             while (true)
             {
@@ -50,7 +53,7 @@ namespace MoonlapseServer
                 Log("Client connected");
                 var proto = new Protocol(client, this);
                 ConnectedProtocols.Add(proto);
-                _ = Task.Run(proto.Start);
+                Task.Run(proto.Start);
             }
         }
 

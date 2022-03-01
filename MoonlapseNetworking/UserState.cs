@@ -7,7 +7,7 @@ namespace MoonlapseNetworking
 {
     /// <summary>
     /// By default, an incoming packet is simply absorbed and not handled.
-    /// It is up to an inheriting state class to subscribe to the event
+    /// It is up to an inheriting userState class to subscribe to the event
     /// handling functionality.
     ///
     /// <br></br>
@@ -15,7 +15,7 @@ namespace MoonlapseNetworking
     /// To register a handler for packet p, you have to add to map local var
     /// as well as add a PacketEventHandler and register it in child class
     /// </summary>
-    public abstract class State
+    public abstract class UserState
     {
         protected delegate void PacketEventHandler(object sender, PacketEventArgs args);
 
@@ -78,7 +78,7 @@ namespace MoonlapseNetworking
 
     public class PacketEventNotSubscribedException : Exception
     {
-        public PacketEventNotSubscribedException(string packetType) : base($"{packetType} not registered in this state")
+        public PacketEventNotSubscribedException(string packetType) : base($"{packetType} not registered in this userState")
         {
         }
     }

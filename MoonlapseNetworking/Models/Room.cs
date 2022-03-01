@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -54,7 +53,7 @@ namespace MoonlapseNetworking.Models
 
                 for (var col = 0; col < Width; col++)
                 {
-                    Terrain[row, col] = int.Parse(values[col]) - 1;
+                    Terrain[row, col] = int.Parse(values[col]) - 1; // -1 because Tiled is 1 indexed.
                 }
             }
 

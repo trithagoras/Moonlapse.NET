@@ -2,14 +2,11 @@
 using System.Net.Sockets;
 using System.IO;
 using System.Threading.Tasks;
-using MoonlapseServer.States;
+using MoonlapseServer.UserStates;
 using MoonlapseNetworking;
 using MoonlapseServer.Utils.Logging;
 using MoonlapseNetworking.Packets;
 using MoonlapseNetworking.Models;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using MoonlapseNetworking.Models.Components;
 
 namespace MoonlapseServer
 {
@@ -18,7 +15,7 @@ namespace MoonlapseServer
         readonly TcpClient _client;
         public Server Server { get; }
 
-        public State State { get; set; }
+        public UserState UserState { get; set; }
 
         public Entity PlayerEntity { get; set; }
 
@@ -26,7 +23,7 @@ namespace MoonlapseServer
         {
             _client = client;
             Server = server;
-            State = new EntryState(this);
+            UserState = new EntryState(this);
         }
 
         public async Task Start()
@@ -65,7 +62,7 @@ namespace MoonlapseServer
         {
             try
             {
-                State.HandlePacketFromString(s);
+                UserState.HandlePacketFromString(s);
             }
             catch (PacketEventNotSubscribedException e)
             {
@@ -115,7 +112,7 @@ namespace MoonlapseServer
 
         public void Log(string message, LogContext context = LogContext.Info)
         {
-            Logging.Log(PlayerEntity == null ? "None" : PlayerEntity.Name, message, context, State.GetType().ToString());
+            Logging.Log(PlayerEntity == null ? "None" : PlayerEntity.Name, message, context, UserState.GetType().ToString());
         }
     }
 }

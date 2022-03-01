@@ -3,9 +3,9 @@ using MoonlapseNetworking;
 using MoonlapseNetworking.Packets;
 using MoonlapseNetworking.Models.Components;
 
-namespace MoonlapseServer.States
+namespace MoonlapseServer.UserStates
 {
-    public class GameState : State
+    public class GameState : UserState
     {
         Protocol _protocol;
 

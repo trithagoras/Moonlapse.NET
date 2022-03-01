@@ -10,9 +10,9 @@ using MoonlapseNetworking.Models.Components;
 using Microsoft.Xna.Framework;
 using SadConsole.Input;
 
-namespace MoonlapseClient.States
+namespace MoonlapseClient.UserStates
 {
-    public class GameState : State
+    public class GameState : UserState
     {
         readonly GameConsole _console;
         readonly NetworkController _networkController;
