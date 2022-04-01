@@ -11,7 +11,6 @@
     <None Remove="Assets\" />
     <None Remove="MonoGame.Framework.DesktopGL" />
     <None Remove="Consoles\" />
-    <None Remove="States\" />
     <None Remove="ClientComponents\" />
     <None Remove="TiledCS" />
     <None Remove="SixLabors.ImageSharp" />
@@ -19,7 +18,6 @@
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Consoles\" />
-    <Folder Include="States\" />
     <Folder Include="ClientComponents\" />
   </ItemGroup>
   <ItemGroup>
