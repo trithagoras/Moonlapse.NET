@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MoonlapseNetworking.Models;
 using MoonlapseNetworking.Models.Components;
@@ -20,6 +21,14 @@ namespace MoonlapseServer
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
             DbPath = System.IO.Path.Join(path, "moonlapse.db");
+        }
+
+        public void Initialize()
+        {
+            if (Database.GetPendingMigrations().Any())
+            {
+                Database.Migrate();
+            }
         }
 
         // The following configures EF to create a Sqlite database file in the

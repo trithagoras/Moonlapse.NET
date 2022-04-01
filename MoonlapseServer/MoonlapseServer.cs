@@ -42,6 +42,7 @@ namespace MoonlapseServer
         {
             Log("Starting MoonlapseServer");
             _listener.Start();
+            Db.Initialize();
 
             LoadRooms();
             Task.Run(SaveChangesToDb);
